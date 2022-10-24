@@ -11,7 +11,7 @@ local_file = "img.png"
 
 # Getting and loading information about image
 print(f"Getting information about comic number: {number}")
-response = requests.get(url+file_url).text
+response = requests.get(url + file_url).text
 loaded_response = json.loads(response)
 img_url = loaded_response["img"]
 # Downloading image
@@ -24,4 +24,3 @@ with open(local_file, "wb") as file:
     file.write(img_content)
 
 print(f"Successfully downloaded comic number {number} to file {local_file}")
-
