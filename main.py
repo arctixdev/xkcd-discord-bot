@@ -120,6 +120,6 @@ async def on_ready():
     printl("Bot fully started in {0} seconds\n".format(end_timer_1 - start_timer_1))
 
 
-# Run the bot
+# Run the bot!
 printl("Starting bot")
 bot.run(TOKEN)
