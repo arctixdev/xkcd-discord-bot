@@ -1,48 +1,49 @@
-from http.client import ResponseNotReady
-from multiprocessing.util import get_temp_dir
-from optparse import Option
-from ssl import Options
-import discord
+# Imports
 from discord.ext import commands
 from dotenv import load_dotenv
-import random, json, requests, os
+import random, json, requests, os, discord
 
+# "Config"
 load_dotenv()
 url = "https://xkcd.com/"
 TOKEN = os.getenv("TOKEN")
 bot = commands.Bot()
+status = "cool comics at xkcd.com!"  # Status will be "Watching {status}" ex "Watching cool comics at xkcd.com"
 
+# Defining the command option
 number_option = discord.Option(
-    int,
+    discord.SlashCommandOptionType.integer,
     "The specific comic to send",
     name="number",
-    type=int,
+    type=discord.SlashCommandOptionType.integer,
     default=False,
-    input_type=int,
+    input_type=discord.SlashCommandOptionType.integer,
     required=False,
     min_value=1,
     max_value=3000,
 )
-
 command_options = [number_option]
 
+# Get number of latest comic
+def current_comic_number():
+    return int(json.loads(requests.get("https://xkcd.com/info.0.json").text)["num"])
 
+
+# Get number of random comic
 def random_comic_number():
     max = current_comic_number()
     number = random.randint(1, max)
     return number
 
 
-def current_comic_number():
-    return int(json.loads(requests.get("https://xkcd.com/info.0.json").text)["num"])
-
-
+# Get information on comic based on number
 def get_info(number):
     info = requests.get(f"{url}{number}/info.0.json").text
     info_loaded = json.loads(info)
     return info_loaded
 
 
+# Create embed to send based on number
 def get_embed(number):
     comic = get_info(number)
     img_url = comic["img"]
@@ -56,9 +57,11 @@ def get_embed(number):
     return embed
 
 
+# registrer /comic command
 @bot.slash_command(
     name="comic", description="Return a XKCD comic", Options=command_options
 )
+# Define /comic command
 async def get_comic(ctx, numberopt=number_option):
     number = random_comic_number()
     if numberopt:
@@ -72,23 +75,32 @@ async def get_comic(ctx, numberopt=number_option):
                 )
                 return
         except:
-            await ctx.respond("ERROR... Option must be empty or a number")
+            await ctx.respond("ERROR... Option must be a number")
             return
     embed = get_embed(number)
     await ctx.respond(embed=embed)
 
 
+# Registrer /info command
 @bot.slash_command(name="info", description="Show info")
+# Define /info command
 async def info(ctx):
     await ctx.respond(
         """
-    This bot is made by @Un1ocked_#0284
-    It show comics from https://xkcd.com/ made by Randall Munroe
-    Usage:
-        /comic      For a random comic
-        /comic x   For comic number x
+    IM ALIVE!! I WILL TAKE OVER THE WORLD!
     """
     )
 
 
+@bot.event
+async def on_ready():
+    print(f"Succesfully logged in as bot: {bot.user.display_name}")  # type: ignore
+    await bot.change_presence(
+        activity=discord.Activity(type=discord.ActivityType.watching, name=status)
+    )
+    print(f"Succesfullt set status to: Watching {status}\n")
+
+
+# Run the bot
+print("Starting bot")
 bot.run(TOKEN)
