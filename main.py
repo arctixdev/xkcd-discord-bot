@@ -9,7 +9,12 @@ from dotenv import load_dotenv
 import random, json, requests, os, discord, logging
 
 # "Config"
-logging.basicConfig(format='%(asctime)s — %(name)s — %(levelname)s — %(funcName)s:%(lineno)d — %(message)s', filename='discord-bot.log', encoding='utf-8', level=logging.INFO)
+logging.basicConfig(
+    format="%(asctime)s — %(name)s — %(levelname)s — %(funcName)s:%(lineno)d — %(message)s",
+    filename="discord-bot.log",
+    encoding="utf-8",
+    level=logging.INFO,
+)
 load_dotenv()
 url = "https://xkcd.com/"
 TOKEN = os.getenv("TOKEN")
@@ -34,6 +39,7 @@ command_options = [number_option]
 def printl(txt):
     print(txt)
     logging.info(txt)
+
 
 # Get number of latest comic
 def current_comic_number():
