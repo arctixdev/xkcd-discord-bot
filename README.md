@@ -1,5 +1,3 @@
-# xkcd-downloader and bot
+# xkcd discordbot
 
-A simple python script to download comics from https://xkcd.com/
-
-And a Discord bot
+A simple Discord bot to view comics from https://xkcd.com/
