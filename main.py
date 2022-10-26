@@ -6,9 +6,10 @@ start_timer_1 = timer()
 # Imports
 from discord.ext import commands
 from dotenv import load_dotenv
-import random, json, requests, os, discord
+import random, json, requests, os, discord, logging
 
 # "Config"
+logging.basicConfig(format='%(asctime)s — %(name)s — %(levelname)s — %(funcName)s:%(lineno)d — %(message)s', filename='discord-bot.log', encoding='utf-8', level=logging.INFO)
 load_dotenv()
 url = "https://xkcd.com/"
 TOKEN = os.getenv("TOKEN")
@@ -28,6 +29,11 @@ number_option = discord.Option(
     max_value=3000,
 )
 command_options = [number_option]
+
+# Print function for printing and logging
+def printl(txt):
+    print(txt)
+    logging.info(txt)
 
 # Get number of latest comic
 def current_comic_number():
@@ -99,15 +105,15 @@ async def info(ctx):
 
 @bot.event
 async def on_ready():
-    print(f"Succesfully logged in as bot: {bot.user.display_name}")  # type: ignore
+    printl(f"Succesfully logged in as bot: {bot.user.display_name}")  # type: ignore
     await bot.change_presence(
         activity=discord.Activity(type=discord.ActivityType.watching, name=status)
     )
-    print(f"Succesfullt set status to: Watching {status}")
+    printl(f"Succesfullt set status to: Watching {status}")
     end_timer_1 = timer()
-    print("Bot fully started in {0} seconds\n".format(end_timer_1 - start_timer_1))
+    printl("Bot fully started in {0} seconds\n".format(end_timer_1 - start_timer_1))
 
 
 # Run the bot
-print("Starting bot")
+printl("Starting bot")
 bot.run(TOKEN)
