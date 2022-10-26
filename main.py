@@ -36,33 +36,33 @@ number_option = discord.Option(
 command_options = [number_option]
 
 # Print function for printing and logging
-def printl(txt):
+async def printl(txt):
     print(txt)
     logging.info(txt)
 
 
 # Get number of latest comic
-def current_comic_number():
+async def current_comic_number():
     return int(json.loads(requests.get("https://xkcd.com/info.0.json").text)["num"])
 
 
 # Get number of random comic
-def random_comic_number():
-    max = current_comic_number()
+async def random_comic_number():
+    max = await current_comic_number()
     number = random.randint(1, max)
     return number
 
 
 # Get information on comic based on number
-def get_info(number):
+async def get_info(number):
     info = requests.get(f"{url}{number}/info.0.json").text
     info_loaded = json.loads(info)
     return info_loaded
 
 
 # Create embed to send based on number
-def get_embed(number):
-    comic = get_info(number)
+async def get_embed(number):
+    comic = await get_info(number)
     img_url = comic["img"]
     embed = discord.Embed(
         title=comic["safe_title"],
@@ -80,21 +80,21 @@ def get_embed(number):
 )
 # Define /comic command
 async def get_comic(ctx, numberopt=number_option):
-    number = random_comic_number()
+    number = await random_comic_number()
     if numberopt:
         try:
             number = int(numberopt)  # type: ignore
-            if number > 0 and number < current_comic_number():
+            if number > 0 and number < await current_comic_number():
                 pass
             else:
                 await ctx.respond(
-                    f"Comic number must be empty for random or between 1 and {current_comic_number()}"
+                    f"Comic number must be empty for random or between 1 and {await current_comic_number()}"
                 )
                 return
         except:
             await ctx.respond("ERROR... Option must be a number")
             return
-    embed = get_embed(number)
+    embed = await get_embed(number)
     await ctx.respond(embed=embed)
 
 
@@ -111,15 +111,16 @@ async def info(ctx):
 
 @bot.event
 async def on_ready():
-    printl(f"Succesfully logged in as bot: {bot.user.display_name}")  # type: ignore
+    await printl(f"Succesfully logged in as bot: {bot.user.display_name}")  # type: ignore
     await bot.change_presence(
         activity=discord.Activity(type=discord.ActivityType.watching, name=status)
     )
-    printl(f"Succesfullt set status to: Watching {status}")
+    await printl(f"Succesfullt set status to: Watching {status}")
     end_timer_1 = timer()
-    printl("Bot fully started in {0} seconds\n".format(end_timer_1 - start_timer_1))
+    await printl("Bot fully started in {0} seconds\n".format(end_timer_1 - start_timer_1))
 
 
 # Run the bot!
-printl("Starting bot")
+print("Starting bot")
+logging.info("Starting bot")
 bot.run(TOKEN)
