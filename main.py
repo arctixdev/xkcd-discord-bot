@@ -1,6 +1,8 @@
 # Timer start
 from timeit import default_timer as timer
+
 start_timer_1 = timer()
+
 # Imports
 from discord.ext import commands
 from dotenv import load_dotenv
