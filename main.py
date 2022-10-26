@@ -65,7 +65,7 @@ def get_embed(number):
     comic = get_info(number)
     img_url = comic["img"]
     embed = discord.Embed(
-        title=comic["title"],
+        title=comic["safe_title"],
         description=f"Link to comic: {url}{number}/",
         color=discord.Colour.dark_purple(),
     )
