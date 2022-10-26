@@ -1,3 +1,6 @@
+# Timer start
+from timeit import default_timer as timer
+start_timer_1 = timer()
 # Imports
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -98,7 +101,9 @@ async def on_ready():
     await bot.change_presence(
         activity=discord.Activity(type=discord.ActivityType.watching, name=status)
     )
-    print(f"Succesfullt set status to: Watching {status}\n")
+    print(f"Succesfullt set status to: Watching {status}")
+    end_timer_1 = timer()
+    print("Bot fully started in {0} seconds\n".format(end_timer_1 - start_timer_1))
 
 
 # Run the bot
