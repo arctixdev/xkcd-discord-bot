@@ -117,7 +117,9 @@ async def on_ready():
     )
     await printl(f"Succesfullt set status to: Watching {status}")
     end_timer_1 = timer()
-    await printl("Bot fully started in {0} seconds\n".format(end_timer_1 - start_timer_1))
+    await printl(
+        "Bot fully started in {0} seconds\n".format(end_timer_1 - start_timer_1)
+    )
 
 
 # Run the bot!
